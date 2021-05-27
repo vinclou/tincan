@@ -103,6 +103,30 @@ describe("test", () => {
       it("should catch and report hook errors", noop);
     });
   });
+
+  describe("each", () => {
+    describe("it.each", () => {
+      type AdditionCase = [number, number, number];
+
+      const testFn = mock.fn();
+      const getName = mock.fn(() => "__");
+      const cases: AdditionCase[] = [
+        [1, 1, 2],
+        [6, 4, 10],
+      ];
+
+      it.each<AdditionCase>(cases, getName, testFn);
+
+      it("should run all the .each cases", () => {
+        expect(testFn).toHaveBeenCalledTimes(2);
+        expect(testFn).toHaveBeenCalledWith(...cases[0]);
+        expect(testFn).toHaveBeenCalledWith(...cases[1]);
+        expect(getName).toHaveBeenCalledTimes(2);
+        expect(getName).toHaveBeenCalledWith(...cases[0]);
+        expect(getName).toHaveBeenCalledWith(...cases[1]);
+      });
+    });
+  });
 });
 
 run();

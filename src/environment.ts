@@ -1,4 +1,4 @@
-import { Hook, TestFunction, Tree } from "./nodes.ts";
+import { EachMethod, Hook, TestFunction, Tree } from "./nodes.ts";
 import { Runner } from "./runner.ts";
 
 export class Environment {
@@ -53,6 +53,21 @@ export class Environment {
     this.currentTree.describeSkip(headline, fn);
   }
 
+  describeEach: EachMethod<void> = (cases, getName, fn) => {
+    this.assertNotRunning("describe.each()");
+    this.currentTree.describeEach(cases, getName, fn);
+  };
+
+  describeOnlyEach: EachMethod<void> = (cases, getName, fn) => {
+    this.assertNotRunning("describe.only.each()");
+    this.currentTree.describeOnlyEach(cases, getName, fn);
+  };
+
+  describeSkipEach: EachMethod<void> = (cases, getName, fn) => {
+    this.assertNotRunning("describe.skip.each()");
+    this.currentTree.describeSkipEach(cases, getName, fn);
+  };
+
   it(headline: string, fn: TestFunction) {
     this.assertNotRunning("it()");
     this.currentTree.it(headline, fn);
@@ -67,6 +82,21 @@ export class Environment {
     this.assertNotRunning("it.skip()");
     this.currentTree.itSkip(headline, fn);
   }
+
+  itEach: EachMethod<void | Promise<void>> = (cases, getName, fn) => {
+    this.assertNotRunning("it.each()");
+    this.currentTree.itEach(cases, getName, fn);
+  };
+
+  itOnlyEach: EachMethod<void | Promise<void>> = (cases, getName, fn) => {
+    this.assertNotRunning("it.only.each()");
+    this.currentTree.itOnlyEach(cases, getName, fn);
+  };
+
+  itSkipEach: EachMethod<void | Promise<void>> = (cases, getName, fn) => {
+    this.assertNotRunning("it.skip.each()");
+    this.currentTree.itSkipEach(cases, getName, fn);
+  };
 
   beforeAll(fn: TestFunction) {
     this.assertNotRunning("beforeAll()");

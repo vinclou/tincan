@@ -22,6 +22,9 @@ node.skip()
 node.focus()
   skips non-focused siblings
 
+node.each()
+  adds multiple nodes
+
 node.fail()
   sets the status to fail
   on an ItNode sets the error to the given value
