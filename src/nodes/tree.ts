@@ -13,6 +13,17 @@ export type EachMethod<Returns> = <CaseArgs extends unknown[]>(
   fn: (...args: CaseArgs) => Returns,
 ) => void;
 
+function bindEach<Ret>(
+  self: Tree,
+  method: (headline: string, fn: () => Ret) => void,
+): EachMethod<Ret> {
+  return function (cases, getName, fn) {
+    cases.forEach((caseArgs) => {
+      method.apply(self, [getName(...caseArgs), () => fn(...caseArgs)]);
+    });
+  };
+}
+
 export class Tree {
   root: RootNode = new RootNode();
   private currentNode: RootNode | DescribeNode = this.root;
@@ -43,35 +54,9 @@ export class Tree {
     this.addDescribeNode(headline, fn).focus();
   }
 
-  describeEach<CaseArgs extends unknown[]>(
-    cases: CaseArgs[],
-    getName: (...args: CaseArgs) => string,
-    fn: (...args: CaseArgs) => void | Promise<void>,
-  ) {
-    for (const caseArgs of cases) {
-      this.describe(getName(...caseArgs), () => fn(...caseArgs));
-    }
-  }
-
-  describeSkipEach<CaseArgs extends unknown[]>(
-    cases: CaseArgs[],
-    getName: (...args: CaseArgs) => string,
-    fn: (...args: CaseArgs) => void | Promise<void>,
-  ) {
-    for (const caseArgs of cases) {
-      this.describeSkip(getName(...caseArgs), () => fn(...caseArgs));
-    }
-  }
-
-  describeOnlyEach<CaseArgs extends unknown[]>(
-    cases: CaseArgs[],
-    getName: (...args: CaseArgs) => string,
-    fn: (...args: CaseArgs) => void | Promise<void>,
-  ) {
-    for (const caseArgs of cases) {
-      this.describeOnly(getName(...caseArgs), () => fn(...caseArgs));
-    }
-  }
+  describeEach = bindEach(this, this.describe);
+  describeSkipEach = bindEach(this, this.describeSkip);
+  describeOnlyEach = bindEach(this, this.describeOnly);
 
   addItNode(headline: string, fn: TestFunction) {
     const parent = this.currentNode;
@@ -95,35 +80,9 @@ export class Tree {
     this.addItNode(headline, fn).focus();
   }
 
-  itEach<CaseArgs extends unknown[]>(
-    cases: CaseArgs[],
-    getName: (...args: CaseArgs) => string,
-    fn: (...args: CaseArgs) => void | Promise<void>,
-  ) {
-    for (const caseArgs of cases) {
-      this.it(getName(...caseArgs), () => fn(...caseArgs));
-    }
-  }
-
-  itOnlyEach<CaseArgs extends unknown[]>(
-    cases: CaseArgs[],
-    getName: (...args: CaseArgs) => string,
-    fn: (...args: CaseArgs) => void | Promise<void>,
-  ) {
-    for (const caseArgs of cases) {
-      this.itOnly(getName(...caseArgs), () => fn(...caseArgs));
-    }
-  }
-
-  itSkipEach<CaseArgs extends unknown[]>(
-    cases: CaseArgs[],
-    getName: (...args: CaseArgs) => string,
-    fn: (...args: CaseArgs) => void | Promise<void>,
-  ) {
-    for (const caseArgs of cases) {
-      this.itSkip(getName(...caseArgs), () => fn(...caseArgs));
-    }
-  }
+  itEach = bindEach(this, this.it);
+  itOnlyEach = bindEach(this, this.itOnly);
+  itSkipEach = bindEach(this, this.itSkip);
 
   beforeAll(fn: TestFunction) {
     this.currentNode.beforeAll.push(new Hook("beforeAll", fn));

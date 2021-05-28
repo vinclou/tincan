@@ -1,31 +1,19 @@
-import { TestFunction } from "./nodes/mod.ts";
+import { EachMethod, TestFunction } from "./nodes/mod.ts";
 import { Environment } from "./environment.ts";
 
 const env = new Environment();
 
-function describeEach<CaseArgs extends unknown[]>(
-  cases: CaseArgs[],
-  getName: (...args: CaseArgs) => string,
-  fn: (...args: CaseArgs) => void,
-) {
+const describeEach: EachMethod<void> = (cases, getName, fn) => {
   env.describeEach(cases, getName, fn);
-}
+};
 
-function describeOnlyEach<CaseArgs extends unknown[]>(
-  cases: CaseArgs[],
-  getName: (...args: CaseArgs) => string,
-  fn: (...args: CaseArgs) => void,
-) {
+const describeOnlyEach: EachMethod<void> = (cases, getName, fn) => {
   env.describeOnlyEach(cases, getName, fn);
-}
+};
 
-function describeSkipEach<CaseArgs extends unknown[]>(
-  cases: CaseArgs[],
-  getName: (...args: CaseArgs) => string,
-  fn: (...args: CaseArgs) => void,
-) {
+const describeSkipEach: EachMethod<void> = (cases, getName, fn) => {
   env.describeSkipEach(cases, getName, fn);
-}
+};
 
 function describeOnly(headline: string, fn: () => void) {
   env.describeOnly(headline, fn);
@@ -46,29 +34,17 @@ describe.only = describeOnly;
 describe.skip = describeSkip;
 describe.each = describeEach;
 
-function itEach<CaseArgs extends unknown[]>(
-  cases: CaseArgs[],
-  getName: (...args: CaseArgs) => string,
-  fn: (...args: CaseArgs) => void | Promise<void>,
-) {
+const itEach: EachMethod<void | Promise<void>> = (cases, getName, fn) => {
   env.itEach(cases, getName, fn);
-}
+};
 
-function itOnlyEach<CaseArgs extends unknown[]>(
-  cases: CaseArgs[],
-  getName: (...args: CaseArgs) => string,
-  fn: (...args: CaseArgs) => void | Promise<void>,
-) {
+const itOnlyEach: EachMethod<void | Promise<void>> = (cases, getName, fn) => {
   env.itOnlyEach(cases, getName, fn);
-}
+};
 
-function itSkipEach<CaseArgs extends unknown[]>(
-  cases: CaseArgs[],
-  getName: (...args: CaseArgs) => string,
-  fn: (...args: CaseArgs) => void | Promise<void>,
-) {
+const itSkipEach: EachMethod<void | Promise<void>> = (cases, getName, fn) => {
   env.itSkipEach(cases, getName, fn);
-}
+};
 
 function itOnly(headline: string, fn: TestFunction) {
   env.itOnly(headline, fn);
