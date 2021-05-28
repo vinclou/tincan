@@ -109,7 +109,7 @@ describe("test", () => {
       type AdditionCase = [number, number, number];
 
       const testFn = mock.fn();
-      const getName = mock.fn(() => "__");
+      const getName = mock.fn(() => "_");
       const cases: AdditionCase[] = [
         [1, 1, 2],
         [6, 4, 10],
@@ -125,6 +125,15 @@ describe("test", () => {
         expect(getName).toHaveBeenCalledWith(...cases[0]);
         expect(getName).toHaveBeenCalledWith(...cases[1]);
       });
+
+      it.each<AdditionCase>(
+        [
+          [2, 2, 4],
+          [7, 3, 10],
+        ],
+        (a, b, c) => `${a} + ${b} should equal ${c}`,
+        (a, b, c) => expect(a + b).toBe(c),
+      );
     });
   });
 });

@@ -19,6 +19,7 @@
 - Hooks (`beforeAll`, `afterAll`, `beforeEach`, `afterEach`)
 - Focusing (`*.only()`)
 - Skipping (`*.skip()`)
+- Each (`*.each()`)
 - Uses `Deno.test`, works with the built-in reporter
 - Lightweight
 
